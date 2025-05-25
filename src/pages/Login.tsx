@@ -27,7 +27,7 @@ export function Login() {
                             <Label htmlFor="password" className="p-2 text-secondary">Senha</Label>
                             <Input id="password" placeholder="senha" type="password"/>
                         </div>
-                        <Button className="mt-10 w-full">Entrar</Button>
+                        <Button className="mt-10 w-full" onClick={() => {window.location.href = "/home"}}>Entrar</Button>
                     </CardContent>
                     <Link to="/register">
                         <CardDescription className="ml-6 text-secondary">Cadastre-se</CardDescription>
