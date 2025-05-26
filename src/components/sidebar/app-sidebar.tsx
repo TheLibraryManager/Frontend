@@ -30,22 +30,30 @@ export function AppSidebar() {
         <SidebarGroup >
           <SidebarMenu >
             <SidebarMenuItem className="flex flex-col gap-3 ml-1">
-              <SidebarMenuButton className="flex items-center gap-3">
-                <Home size={18} color="white"/>
-                <Link to="/home" className="w-full text-white">Home</Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton>
-                <Book size={18} color="white"/>
-                <Link to="/book" className="w-full text-white">Livros</Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton>
-                <User size={18} color="white"/>
-                <Link to="/client" className="w-full text-white">Usuários</Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton>
-                <ArrowRightLeft size={18} color="white"/>
-                <Link to="/loan" className="w-full text-white">Empréstimos</Link>
-              </SidebarMenuButton>
+              <Link to="/home">
+                <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
+                  <Home size={18} color="white"/>
+                  <p className="w-full text-white">Home</p>
+                </SidebarMenuButton>
+              </Link>
+              <Link to="/book">
+                <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
+                  <Book size={18} color="white"/>
+                  <p className="w-full text-white">Livros</p>
+                </SidebarMenuButton>
+              </Link>
+              <Link to="/client">
+                <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
+                  <User size={18} color="white"/>
+                  <p className="w-full text-white">Usuários</p>
+                  </SidebarMenuButton>
+              </Link>
+              <Link to="/loan">
+                <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
+                  <ArrowRightLeft size={18} color="white"/>
+                  <p className="w-full text-white">Empréstimos</p>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
