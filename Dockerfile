@@ -16,3 +16,4 @@ COPY . .
 EXPOSE 5173
 
 # O comando final está no docker-compose, para suporte a hot-reload
+ENV CHOKIDAR_USEPOLLING=true

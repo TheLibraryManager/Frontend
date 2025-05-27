@@ -8,28 +8,34 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+//import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Link } from "react-router-dom"
-import { Home, Book, User, ArrowRightLeft, ArrowLeftToLine } from "lucide-react";
+import { Home, Book, User, ArrowRightLeft, ArrowLeftToLine, Library } from "lucide-react";
 
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
 
-      <SidebarHeader className="mb-10 shadow-sm">
-        <div className="flex items-center gap-3">
-            <Avatar>
-              <AvatarFallback>G</AvatarFallback>
-            </Avatar>
-            <h1 className="text-white">Gerenciador</h1>
-        </div>
+       <SidebarHeader>
+        
+            <SidebarMenuButton size="lg" asChild>
+              <div className="flex items-center gap-6">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white text-primary">
+                  <Library/>
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-semibold text-white">Biblioteca</span>
+                </div>
+              </div>
+            </SidebarMenuButton>
+          
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup >
           <SidebarMenu >
-            <SidebarMenuItem className="flex flex-col gap-3 ml-1">
+            <SidebarMenuItem className="flex flex-col gap-3">
               <Link to="/home">
                 <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
                   <Home size={18} color="white"/>
@@ -45,7 +51,7 @@ export function AppSidebar() {
               <Link to="/client">
                 <SidebarMenuButton className="flex items-center gap-3 cursor-pointer">
                   <User size={18} color="white"/>
-                  <p className="w-full text-white">Usuários</p>
+                  <p className="w-full text-white">Clientes</p>
                   </SidebarMenuButton>
               </Link>
               <Link to="/loan">
