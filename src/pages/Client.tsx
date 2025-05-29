@@ -11,22 +11,39 @@ import {
 } from "@/components/ui/table";
 
 import { Input } from "@/components/ui/input";
-import { AppModal } from "@/components/modal/app-modal";
+import { ClientModal } from "@/components/modal/client-modal";
 import { Separator } from "@/components/ui/separator";
 import {Header} from "@/components/header/header";
+import { useEffect, useState } from "react";
+import api from "@/services/api";
 
 
 export function Client() {
 
-  const dataBooks = [
-    { id: 1, name: "Arthur", email: "tutu@gmail.com", phone: '84 9999-9999' },
-    { id: 2, name: "Carlos", email: "carlo@gmail.com", phone: '84 9999-9999' },
-    { id: 3, name: "Edson", email: "edson@gmail.com", phone: '84 9999-9999' },
-    { id: 4, name: "Daniel", email: "dani@gmail.com", phone: '84 9999-9999' },
-    { id: 5, name: "Eduardo", email: "dudu@gmail.com", phone: '84 9999-9999' },
+  type Client = {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    cpf: string;
+  }
+
+  const [dataBooks, setDataBooks] = useState<Client[]>([]);
+
+  function fetchClients() {
+    api.get('/clients')
+      .then(response => {
+        setDataBooks(response.data.reverse());
+      })
+      .catch(error => {
+        console.error("Error fetching clients:", error);
+      });
+  }
 
 
-  ];
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
   return (
     <div className="flex h-screen w-full">
@@ -41,7 +58,7 @@ export function Client() {
               <Input className="w-md"></Input>
               <Search size={16}/>
             </div>
-            <AppModal/>
+            <ClientModal onAdd={fetchClients}/>
           </div>
           <div className="rounded-md border overflow-hidden">
             <Table className="w-full">

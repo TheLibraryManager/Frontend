@@ -10,7 +10,40 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Header } from "@/components/header/header";
 import { Separator } from "@/components/ui/separator";
 
+import { useEffect, useState } from "react";
+import api from "@/services/api";
+
 export function Home() {
+
+  const [loan, setLoan] = useState(0);
+  const [books, setBooks] = useState(0);
+  const [clients, setClients] = useState(0);
+
+  useEffect(() => {
+    api.get('/loans')
+      .then(response => {
+        setLoan(response.data.length);
+      })
+      .catch(error => {
+        console.error("Error fetching loans:", error);
+      });
+
+    api.get('/books')
+      .then(response => {
+        setBooks(response.data.length);
+      })
+      .catch(error => {
+        console.error("Error fetching books:", error);
+      });
+
+    api.get('/clients')
+      .then(response => {
+        setClients(response.data.length);
+      })
+      .catch(error => {
+        console.error("Error fetching clients:", error);
+      });
+  }, []);
 
   const chartData = [
   { month: "January", loan: 186 },
@@ -30,34 +63,44 @@ export function Home() {
 
     return (
         <div className="flex h-screen w-full">
+
           <AppSidebar/>
+
           <div className="w-full flex flex-col">
 
             <Header/>
+
             <Separator/>
+
             <main className="w-full p-8 flex flex-col gap-8">
+
               <div className="flex items-center justify-around gap-8">
+
                 <div>
                   <p className="text-secondary p-2 text-sm">Total emprestimos</p>
                   <Card className="w-36 lg:w-68 shadow-md">
-                    <p className="text-6xl font-medium text-primary mt-8 ml-4">12</p>
+                    <p className="text-6xl font-medium text-primary mt-8 ml-4">{loan}</p>
                   </Card>
                 </div>
+
                 <div>
                   <p className="text-secondary p-2 text-sm">Livros disponíveis</p>
                   <Card className="w-36 lg:w-68 shadow-md">
-                    <p className="text-6xl font-medium text-primary mt-8 ml-4">23</p>
+                    <p className="text-6xl font-medium text-primary mt-8 ml-4">{books}</p>
                   </Card>
                 </div>
+
                 <div>
                   <p className="text-secondary p-2 text-sm">Total clientes</p>
                   <Card className="w-36 lg:w-68 shadow-md">
-                    <p className="text-6xl font-medium text-primary mt-8 ml-4">16</p>
+                    <p className="text-6xl font-medium text-primary mt-8 ml-4">{clients}</p>
                   </Card>
                 </div>
+
               </div>
 
               <div className="flex justify-around flex-col gap-10 lg:flex-row">
+
                 <div>
                   <p className="text-secondary p-2 text-sm">Emprestimos Mês</p>
                   <Card className="w-lg lg:w-2xl shadow-md p-10">

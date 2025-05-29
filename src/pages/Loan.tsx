@@ -11,21 +11,43 @@ import {
 } from "@/components/ui/table";
 
 import { Input } from "@/components/ui/input";
-import { AppModal } from "@/components/modal/app-modal";
+import { LoanModal } from "@/components/modal/loan-modal";
 import { Separator } from "@/components/ui/separator";
 import {Header} from "@/components/header/header";
+import api from "@/services/api";
+import { useEffect, useState } from "react";
 
 
 export function Loan() {
 
-  const dataBooks = [
-    { id: 1, name: "Arthur", book: "pequeno principe", status: 'emprestado' },
-    { id: 4, name: "Gabriela", book: "o guarani", status: 'disponível' },
-    { id: 5, name: "Daniel", book: "o senhor dos aneis", status: 'disponível' },
-    { id: 6, name: "Eduardo", book: "o hobbit", status: 'disponível' },
-    { id: 7, name: "Fernanda", book: "a moreninha", status: 'emprestado' },
+  type Loan = {
+    id: number;
+    client : {
+      name: string;
+    };
+    book: {
+      title: string;
+    }
+    dueDate: string;
+  }
 
-  ];
+  const [dataBooks, setDataBooks] = useState<Loan[]>([]);
+
+  function fetchLoans() {
+    api.get('/loans')
+      .then(response => {
+        setDataBooks(response.data.reverse());
+      })
+      .catch(error => {
+        console.error("Error fetching loans:", error);
+      });
+  }
+
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
 
   return (
     <div className="flex h-screen w-full">
@@ -40,7 +62,7 @@ export function Loan() {
               <Input className="w-md"></Input>
               <Search size={16}/>
             </div>
-            <AppModal/>
+            <LoanModal onAdd={fetchLoans}/>
           </div>
           <div className="rounded-md border overflow-hidden">
             <Table className="w-full">
@@ -49,7 +71,7 @@ export function Loan() {
                   <TableHead>ID</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Livro</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Vencimento</TableHead>
                   <TableHead className="text-center">Detalhes</TableHead>
                 </TableRow>
               </TableHeader>
@@ -57,9 +79,11 @@ export function Loan() {
                 {dataBooks.map((book) => (
                   <TableRow key={book.id}>
                     <TableCell>{book.id.toString().padStart(2, '0')}</TableCell>
-                    <TableCell>{book.name}</TableCell>
-                    <TableCell>{book.book}</TableCell>
-                    <TableCell>{book.status}</TableCell>
+                    <TableCell>{book.client.name}</TableCell>
+                    <TableCell>{book.book.title}</TableCell>
+                    <TableCell>
+                      {new Date(book.dueDate).toLocaleDateString("pt-BR")}
+                    </TableCell>
                     <TableCell className="text-center">
                       <Button>Detalhes</Button>
                     </TableCell>
