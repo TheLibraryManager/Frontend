@@ -11,30 +11,52 @@ import {
 } from "@/components/ui/table";
 
 import { Input } from "@/components/ui/input";
-import { AppModal } from "@/components/modal/app-modal";
+import { BookModal } from "@/components/modal/book-modal";
 import { Separator } from "@/components/ui/separator";
 import {Header} from "@/components/header/header";
+import { useEffect, useState } from "react";
+import api from "@/services/api";
 
 
 export function Book() {
 
-  const dataBooks = [
-    { id: 1, title: "Pequeno Príncipe", genre: "Infantil", copies: 8 },
-    { id: 2, title: "Dom Casmurro", genre: "Romance", copies: 5 },
-    { id: 3, title: "1984", genre: "Ficção Científica", copies: 10 },
-    { id: 4, title: "O Senhor dos Aneis", genre: "Fantasia", copies: 15 },
-    { id: 5, title: "O Hobbit", genre: "Fantasia", copies: 12 },
-    { id: 6, title: "A Moreninha", genre: "Romance", copies: 7 },
-    { id: 7, title: "O Guarani", genre: "Romance", copies: 4 },
+  type Book = {
+    id: number;
+    title: string;
+    author: string;
+    genre: string;
+    copies: number;
+  }
 
-  ];
+  const [dataBooks, setDataBooks] = useState<Book[]>([]);
+
+
+  const fetchBooks = async () => {
+    api.get('/books')
+      .then(response => {
+        setDataBooks(response.data.reverse());
+      })
+      .catch(error => {
+        console.error("Error fetching books:", error);
+      });
+  }
+
+  
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   return (
     <div className="flex h-screen w-full">
+
       <AppSidebar />
+
       <div className="w-full flex flex-col"> 
+
         <Header/>
+
         <Separator/>  
+
         <main className="w-full px-8 mt-6">
         
           <div className="flex items-center justify-between mb-6">
@@ -42,14 +64,17 @@ export function Book() {
               <Input className="w-md"></Input>
               <Search size={16}/>
             </div>
-            <AppModal/>
+            <BookModal onAdd={fetchBooks}/>
           </div>
+
           <div className="rounded-md border overflow-hidden">
             <Table className="w-full">
+
               <TableHeader>
                 <TableRow className="bg-blue-50">
                   <TableHead>ID</TableHead>
                   <TableHead>Título</TableHead>
+                  <TableHead>Autor</TableHead>
                   <TableHead>Gênero</TableHead>
                   <TableHead>Exemp.</TableHead>
                   <TableHead className="text-center">Detalhes</TableHead>
@@ -60,6 +85,7 @@ export function Book() {
                   <TableRow key={book.id}>
                     <TableCell>{book.id.toString().padStart(2, '0')}</TableCell>
                     <TableCell>{book.title}</TableCell>
+                    <TableCell>{book.author}</TableCell>
                     <TableCell>{book.genre}</TableCell>
                     <TableCell>{book.copies.toString().padStart(2, '0')}</TableCell>
                     <TableCell className="text-center">
@@ -68,6 +94,7 @@ export function Book() {
                   </TableRow>
                 ))}
               </TableBody>
+
             </Table>
           </div>
         </main>
