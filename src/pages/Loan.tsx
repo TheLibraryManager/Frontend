@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -26,21 +26,30 @@ export function Loan() {
       name: string;
     };
     book: {
-      title: string;
+      title: string | null;
     }
     dueDate: string;
   }
 
-  const [dataBooks, setDataBooks] = useState<Loan[]>([]);
+  const [dataLoan, setDataLoan] = useState<Loan[]>([]);
 
-  function fetchLoans() {
-    api.get('/loans')
+  const fetchLoans = async () => {
+    await api.get('/loans')
       .then(response => {
-        setDataBooks(response.data.reverse());
+        setDataLoan(response.data.reverse());
       })
       .catch(error => {
         console.error("Error fetching loans:", error);
       });
+  }
+
+  const deleteLoan = async (id: number) => {
+    try {
+      await api.delete(`/loans/${id}`);
+      fetchLoans();
+    } catch (error) {
+      console.error("Error deleting loan:", error);
+    }
   }
 
 
@@ -72,20 +81,23 @@ export function Loan() {
                   <TableHead>Nome</TableHead>
                   <TableHead>Livro</TableHead>
                   <TableHead>Vencimento</TableHead>
-                  <TableHead className="text-center">Detalhes</TableHead>
+                  <TableHead className="text-center"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dataBooks.map((book) => (
-                  <TableRow key={book.id}>
-                    <TableCell>{book.id.toString().padStart(2, '0')}</TableCell>
-                    <TableCell>{book.client.name}</TableCell>
-                    <TableCell>{book.book.title}</TableCell>
+                {dataLoan.map((loan) => (
+                  <TableRow key={loan.id}>
+                    <TableCell>{loan.id.toString().padStart(2, '0')}</TableCell>
+                    <TableCell>{loan.client? loan.client.name : <i>Cliente removido</i>}</TableCell>
+                    <TableCell>{loan.book? loan.book.title : <i>Livro removido</i>}</TableCell>
                     <TableCell>
-                      {new Date(book.dueDate).toLocaleDateString("pt-BR")}
+                      {new Date(loan.dueDate).toLocaleDateString("pt-BR")}
                     </TableCell>
                     <TableCell className="text-center">
-                      <Button>Detalhes</Button>
+                      <Button variant="outline" className="hover:text-red-600 cursor-pointer active:bg-gray-200"
+                        onClick={() => {deleteLoan(loan.id)}}>
+                        <Trash/>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

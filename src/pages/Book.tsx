@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -41,6 +41,15 @@ export function Book() {
       });
   }
 
+  const deleteBook = async (id: number) => {
+    try {
+      await api.delete(`/books/${id}`);
+      fetchBooks();
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  }
+
   
   useEffect(() => {
     fetchBooks();
@@ -77,7 +86,7 @@ export function Book() {
                   <TableHead>Autor</TableHead>
                   <TableHead>Gênero</TableHead>
                   <TableHead>Exemp.</TableHead>
-                  <TableHead className="text-center">Detalhes</TableHead>
+                  <TableHead className="text-center"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,7 +98,10 @@ export function Book() {
                     <TableCell>{book.genre}</TableCell>
                     <TableCell>{book.copies.toString().padStart(2, '0')}</TableCell>
                     <TableCell className="text-center">
-                      <Button>Detalhes</Button>
+                      <Button variant="outline" className="hover:text-red-600 cursor-pointer active:bg-gray-200"
+                        onClick={() => { deleteBook(book.id) }}>
+                        <Trash/>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

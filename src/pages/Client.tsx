@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Trash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -28,16 +28,25 @@ export function Client() {
     cpf: string;
   }
 
-  const [dataBooks, setDataBooks] = useState<Client[]>([]);
+  const [dataClients, setDataClients] = useState<Client[]>([]);
 
-  function fetchClients() {
+  const fetchClients = () => {
     api.get('/clients')
       .then(response => {
-        setDataBooks(response.data.reverse());
+        setDataClients(response.data.reverse());
       })
       .catch(error => {
         console.error("Error fetching clients:", error);
       });
+  }
+
+  const deleteClient = async (id: number) => {
+    try {
+      await api.delete(`/clients/${id}`);
+      fetchClients();
+    } catch (error) {
+      console.error("Error deleting client:", error);
+    }
   }
 
 
@@ -68,18 +77,21 @@ export function Client() {
                   <TableHead>Nome</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Phone</TableHead>
-                  <TableHead className="text-center">Detalhes</TableHead>
+                  <TableHead className="text-center"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dataBooks.map((book) => (
-                  <TableRow key={book.id}>
-                    <TableCell>{book.id.toString().padStart(2, '0')}</TableCell>
-                    <TableCell>{book.name}</TableCell>
-                    <TableCell>{book.email}</TableCell>
-                    <TableCell>{book.phone}</TableCell>
+                {dataClients.map((client) => (
+                  <TableRow key={client.id}>
+                    <TableCell>{client.id.toString().padStart(2, '0')}</TableCell>
+                    <TableCell>{client.name}</TableCell>
+                    <TableCell>{client.email}</TableCell>
+                    <TableCell>{client.phone}</TableCell>
                     <TableCell className="text-center">
-                      <Button>Detalhes</Button>
+                      <Button variant="outline" className="hover:text-red-600 cursor-pointer active:bg-gray-200"
+                        onClick={() => {deleteClient(client.id)}}>
+                        <Trash/>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
